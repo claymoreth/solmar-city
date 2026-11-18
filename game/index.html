@@ -1,19 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block Dodger</title>
-<style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #11141b; }
-  #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  /* Read aloud, never shown: the status line screen readers announce. */
-  #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-</style>
+<title>Solmar City</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<canvas id="game" aria-label="Block Dodger: move the paddle left and right to dodge falling blocks and catch coins"></canvas>
-<p id="status" role="status" aria-live="polite"></p>
-<script type="module" src="./src/main.js"></script>
+<div id="wrap">
+  <canvas id="game" width="1280" height="720"></canvas>
+
+  <div id="hud" class="hidden">
+    <div id="hud-left">
+      <div id="cash-text">$150</div>
+      <div id="hp-row"><span>HP</span><div id="hp-bar"><div id="hp-fill"></div></div><span id="hp-text">100</span></div>
+      <div id="ammo-text">Ammo 24 / 48</div>
+      <div id="level-text">LV 1 &bull; 0 XP</div>
+    </div>
+    <div id="objective-box">
+      <div id="mission-text">M1 &mdash; Deliver the package</div>
+      <div id="objective-text">Reach the Old Market drop point</div>
+      <div id="counter-text"></div>
+    </div>
+    <div id="hud-right">
+      <div id="wanted-text"></div>
+      <div id="tod-text">&#9788; DAY</div>
+      <div id="district-text">Downtown</div>
+    </div>
+    <canvas id="minimap" width="200" height="140"></canvas>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <div id="menu-screen" class="screen">
+    <h1>SOLMAR CITY</h1>
+    <p class="tagline">Rio Vega is back. Take the city, one mission at a time.</p>
+    <button id="btn-play" class="big-btn">PLAY</button>
+    <div class="controls">
+      <div><b>WASD</b> walk / drive</div>
+      <div><b>Shift</b> sprint</div>
+      <div><b>E</b> enter / exit car &amp; bike</div>
+      <div><b>F / click</b> punch / shoot (aim with mouse)</div>
+      <div><b>R</b> reload</div>
+      <div><b>Space</b> handbrake</div>
+      <div><b>G</b> garage / gun shop (when near)</div>
+      <div><b>T</b> time of day</div>
+      <div><b>M</b> map</div>
+      <div><b>Esc</b> pause</div>
+    </div>
+    <p class="missions-line">8 missions &mdash; from a first delivery to BIG MARCO himself.</p>
+  </div>
+
+  <div id="pause-screen" class="screen hidden">
+    <h1>PAUSED</h1>
+    <button id="btn-resume" class="big-btn">RESUME</button>
+    <p class="hint">Press Esc to resume</p>
+  </div>
+
+  <div id="map-screen" class="screen hidden">
+    <h2>SOLMAR CITY &mdash; MAP</h2>
+    <canvas id="map-canvas" width="900" height="600"></canvas>
+    <p class="hint">Press M or Esc to close</p>
+  </div>
+
+  <div id="shop-screen" class="screen hidden">
+    <h2 id="shop-title">GUN SHOP</h2>
+    <p id="shop-cash">$150</p>
+    <div id="shop-items"></div>
+    <button id="btn-shop-falcon" class="shop-btn">Buy Falcon-9 &mdash; $500</button>
+    <button id="btn-shop-ammo" class="shop-btn">Buy ammo +24 &mdash; $30</button>
+    <button id="btn-shop-repair" class="shop-btn hidden">Repair vehicle &mdash; $50</button>
+    <button id="btn-shop-close" class="shop-btn">Close (Esc)</button>
+  </div>
+
+  <div id="victory-screen" class="screen hidden">
+    <h1>VICTORY</h1>
+    <p class="tagline">BIG MARCO is down. The rival gang is finished. Solmar City is yours, Rio.</p>
+    <div id="victory-stats">
+      <div>Total cash: <b id="victory-cash">$0</b></div>
+      <div>Level: <b id="victory-level">LV 1</b></div>
+      <div>Kills: <b id="victory-kills">0</b></div>
+      <div>Missions: <b id="victory-missions">8 / 8 complete</b></div>
+    </div>
+    <button id="btn-victory-roam" class="big-btn">FREE ROAM</button>
+    <button id="btn-victory-again" class="big-btn">PLAY AGAIN</button>
+  </div>
+
+  <div id="busted-screen" class="screen hidden">
+    <h1 id="busted-title">WASTED</h1>
+    <p id="busted-text">You woke up at the hospital. The city took 10% of your cash.</p>
+    <button id="btn-busted-ok" class="big-btn">CONTINUE</button>
+  </div>
+</div>
+
+<script src="city.js"></script>
+<script src="save.js"></script>
+<script src="audio.js"></script>
+<script src="vehicles.js"></script>
+<script src="player.js"></script>
+<script src="traffic.js"></script>
+<script src="pedestrians.js"></script>
+<script src="police.js"></script>
+<script src="combat.js"></script>
+<script src="missions.js"></script>
+<script src="shop.js"></script>
+<script src="hud.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
